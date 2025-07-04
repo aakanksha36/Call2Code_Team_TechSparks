@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>🌦️ Smart Event Alert System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="standalone.css">
+</head>
+<body>
+    <!-- Login Overlay -->
+    <div id="login-overlay" style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(240,240,255,0.97);z-index:9999;display:flex;align-items:center;justify-content:center;">
+        <form id="login-form" style="background:#fff;border-radius:16px;box-shadow:0 4px 24px rgba(127,83,172,0.13);padding:2.5rem 2.5rem 2rem 2.5rem;min-width:320px;display:flex;flex-direction:column;align-items:center;">
+            <h2 style="color:#7f53ac;margin-bottom:1.5rem;">🔒 Login Required</h2>
+            <div style="width:100%;margin-bottom:1.2rem;">
+                <label for="login-username" style="font-weight:600;color:#374151;display:block;margin-bottom:0.3rem;">Username</label>
+                <input id="login-username" type="text" required style="width:100%;padding:0.7rem;border-radius:8px;border:1.5px solid #e0c3fc;font-size:1rem;">
+            </div>
+            <div style="width:100%;margin-bottom:1.2rem;">
+                <label for="login-password" style="font-weight:600;color:#374151;display:block;margin-bottom:0.3rem;">Password</label>
+                <input id="login-password" type="password" required style="width:100%;padding:0.7rem;border-radius:8px;border:1.5px solid #e0c3fc;font-size:1rem;">
+            </div>
+            <button type="submit" style="background:linear-gradient(90deg,#7f53ac 0%,#647dee 100%);color:#fff;padding:0.7rem 2rem;border:none;border-radius:8px;font-size:1rem;font-weight:600;cursor:pointer;box-shadow:0 2px 8px rgba(127,83,172,0.10);margin-bottom:0.7rem;">Login</button>
+            <div id="login-error" style="color:#ee5a24;font-size:0.98rem;display:none;margin-top:0.5rem;">Invalid credentials. Try again.</div>
+        </form>
+    </div>
+
+    <nav class="navbar" aria-label="Main navigation">
+        <div class="nav-container">
+            <span class="nav-title">🌦️ Smart Event Alert System</span>
+            <input type="checkbox" id="nav-toggle" class="nav-toggle" />
+            <label for="nav-toggle" class="nav-toggle-label" aria-label="Open navigation menu">☰</label>
+            <ul class="nav-links">
+                <li><a href="#" class="nav-link active" data-page="home">Home</a></li>
+                <li><a href="#" class="nav-link" data-page="about">About</a></li>
+                <li><a href="#" class="nav-link" data-page="contact">Contact</a></li>
+                <li><a href="#" class="nav-link" data-page="status">Status</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Home Page -->
+    <div id="home" class="page active">
+        <div class="container">
+            <h1>🌦️ Smart Event Alert System</h1>
+            <div style="text-align:center; color:#555; font-size:1.1rem; margin-bottom:1em;">Stay prepared for your events with real-time weather alerts!</div>
+            <div id="date" style="text-align:center; font-size:1.05rem; margin-bottom:1.2em;"></div>
+            <div style="text-align:center; margin-bottom:1.2em; color:#444; font-size:1rem;">
+                <span>Below are your upcoming events. Weather is checked automatically. If bad weather is expected for an outdoor event, you'll get an SMS alert.</span>
+            </div>
+            <button id="refresh-btn" aria-label="Refresh events">🔄 Refresh Events</button>
+            <h2 style="text-align:center; margin-bottom:1.5rem;">Today's Events</h2>
+            <div id="event-list" class="event-list" aria-live="polite"></div>
+        </div>
+    </div>
+
+    <!-- About Page -->
+    <div id="about" class="page">
+        <div class="container">
+            <h1>About Smart Event Alert System</h1>
+            <p style="font-size:1.1rem; line-height:1.6; margin-bottom:2rem;">
+                The Smart Event Alert System is a comprehensive solution designed to keep you informed about weather conditions for your outdoor events. 
+                Using advanced weather APIs and SMS notifications, we ensure you're never caught off guard by unexpected weather changes.
+            </p>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3>🌤️ Real-time Weather</h3>
+                    <p>Get current weather conditions and forecasts for any location using OpenWeatherMap API integration.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>📱 SMS Alerts</h3>
+                    <p>Receive instant SMS notifications via Twilio when bad weather is expected for outdoor events.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>📅 Event Integration</h3>
+                    <p>Seamlessly integrate with Google Calendar to automatically check weather for your scheduled events.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>📊 Smart Analytics</h3>
+                    <p>Track weather patterns and alert history to make informed decisions about future events.</p>
+                </div>
+            </div>
+
+            <h2>How It Works</h2>
+            <div style="background:#f8fbff; padding:1.5rem; border-radius:12px; margin:1.5rem 0;">
+                <ol style="line-height:1.8;">
+                    <li><strong>Event Detection:</strong> System scans your calendar for upcoming outdoor events</li>
+                    <li><strong>Weather Check:</strong> Fetches real-time weather data for event locations</li>
+                    <li><strong>Risk Assessment:</strong> Analyzes weather conditions for potential risks</li>
+                    <li><strong>Smart Alerts:</strong> Sends SMS notifications only when necessary</li>
+                    <li><strong>Dashboard Updates:</strong> Provides real-time status updates on the web interface</li>
+                </ol>
+            </div>
+
+            <h2>Technology Stack</h2>
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:1rem; margin:1.5rem 0;">
+                <div style="background:#e6f0fb; padding:1rem; border-radius:8px; text-align:center;">
+                    <strong>Backend:</strong> Python Flask
+                </div>
+                <div style="background:#e6f0fb; padding:1rem; border-radius:8px; text-align:center;">
+                    <strong>Weather API:</strong> OpenWeatherMap
+                </div>
+                <div style="background:#e6f0fb; padding:1rem; border-radius:8px; text-align:center;">
+                    <strong>SMS Service:</strong> Twilio
+                </div>
+                <div style="background:#e6f0fb; padding:1rem; border-radius:8px; text-align:center;">
+                    <strong>Frontend:</strong> HTML5, CSS3, JavaScript
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Page -->
+    <div id="contact" class="page">
+        <div class="container">
+            <h1>Contact Us</h1>
+            <p style="text-align:center; color:#555; margin-bottom:2rem;">
+                Have questions or need support? We're here to help! Fill out the form below and we'll get back to you within 24 hours.
+            </p>
+            
+            <div class="contact-form">
+                <form id="contact-form">
+                    <div class="form-group">
+                        <label for="name">Full Name *</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email Address *</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" name="phone">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="subject">Subject *</label>
+                        <select id="subject" name="subject" required>
+                            <option value="">Select a subject</option>
+                            <option value="general">General Inquiry</option>
+                            <option value="support">Technical Support</option>
+                            <option value="feature">Feature Request</option>
+                            <option value="bug">Bug Report</option>
+                            <option value="partnership">Partnership</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">Message *</label>
+                        <textarea id="message" name="message" rows="5" required placeholder="Tell us how we can help you..."></textarea>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">Send Message</button>
+                </form>
+                
+                <div id="form-status" style="text-align:center; margin-top:1.5rem; padding:1rem; border-radius:8px; display:none;"></div>
+            </div>
+
+            <div style="margin-top:3rem; text-align:center;">
+                <h3>Other Ways to Reach Us</h3>
+                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:1.5rem; margin-top:1.5rem;">
+                    <div style="background:#f8fbff; padding:1.5rem; border-radius:12px;">
+                        <div style="font-size:2rem; margin-bottom:0.5rem;">📧</div>
+                        <strong>Email</strong><br>
+                        support@weatherevents.com
+                    </div>
+                    <div style="background:#f8fbff; padding:1.5rem; border-radius:12px;">
+                        <div style="font-size:2rem; margin-bottom:0.5rem;">📞</div>
+                        <strong>Phone</strong><br>
+                        +1 (555) 123-4567
+                    </div>
+                    <div style="background:#f8fbff; padding:1.5rem; border-radius:12px;">
+                        <div style="font-size:2rem; margin-bottom:0.5rem;">🏢</div>
+                        <strong>Office</strong><br>
+                        123 Weather St, Tech City, TC 12345
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Status Page -->
+    <div id="status" class="page">
+        <div class="container">
+            <h1>System Status</h1>
+            <p style="text-align:center; color:#555; margin-bottom:2rem;">
+                Real-time monitoring of our services and system performance.
+            </p>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="total-events">0</div>
+                    <div>Total Events Today</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="alerts-sent">0</div>
+                    <div>Alerts Sent</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="api-status">100%</div>
+                    <div>API Uptime</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="response-time">0.2s</div>
+                    <div>Avg Response Time</div>
+                </div>
+            </div>
+
+            <h2>Service Status</h2>
+            <div style="background:#f8fbff; padding:1.5rem; border-radius:12px; margin:1.5rem 0;">
+                <div style="display:flex; justify-content:space-between; align-items:center; padding:0.5rem 0; border-bottom:1px solid #e5e7eb;">
+                    <span><strong>Weather API</strong></span>
+                    <span style="color:#10b981;">🟢 Operational</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; padding:0.5rem 0; border-bottom:1px solid #e5e7eb;">
+                    <span><strong>SMS Service</strong></span>
+                    <span style="color:#10b981;">🟢 Operational</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; padding:0.5rem 0; border-bottom:1px solid #e5e7eb;">
+                    <span><strong>Calendar Integration</strong></span>
+                    <span style="color:#10b981;">🟢 Operational</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; padding:0.5rem 0;">
+                    <span><strong>Web Interface</strong></span>
+                    <span style="color:#10b981;">🟢 Operational</span>
+                </div>
+            </div>
+
+            <h2>Recent Alerts</h2>
+            <div class="alert-history">
+                <div class="alert-item">
+                    <div>
+                        <strong>Team Lunch - Pune</strong><br>
+                        <small>Rain expected at 2:00 PM</small>
+                    </div>
+                    <span style="color:#2563eb;">☔ SMS Sent</span>
+                </div>
+                <div class="alert-item">
+                    <div>
+                        <strong>Outdoor Meeting - Mumbai</strong><br>
+                        <small>Thunderstorm expected at 4:00 PM</small>
+                    </div>
+                    <span style="color:#2563eb;">☔ SMS Sent</span>
+                </div>
+                <div class="alert-item">
+                    <div>
+                        <strong>Park Walk - Delhi</strong><br>
+                        <small>Clear weather at 6:00 PM</small>
+                    </div>
+                    <span style="color:#10b981;">✅ No Alert</span>
+                </div>
+            </div>
+
+            <button id="refresh-status" style="display:block; margin:2rem auto 0 auto; padding:0.75rem 2rem; background:#2563eb; color:white; border:none; border-radius:8px; cursor:pointer;">
+                🔄 Refresh Status
+            </button>
+        </div>
+    </div>
+
+    <footer style="text-align:center; color:#888; font-size:0.98rem; margin:2em 0 1em 0;">
+        &copy; 2024 Smart Event Alert System &mdash; Stay safe, stay informed!
+    </footer>
+
+    <script>
+        // Navigation functionality
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetPage = this.getAttribute('data-page');
+                
+                // Update active nav link
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Show target page
+                document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+                document.getElementById(targetPage).classList.add('active');
+            });
+        });
+
+        // Mock data - simulates what the backend would return
+        const mockEvents = [
+            {
+                "title": "Team Lunch",
+                "time": new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString().slice(0, 19).replace('T', ' '),
+                "location": "Pune",
+                "outdoor": true,
+                "weather": "Rain",
+                "alertSent": true
+            },
+            {
+                "title": "Board Meeting",
+                "time": new Date(Date.now() + 4 * 60 * 60 * 1000).toISOString().slice(0, 19).replace('T', ' '),
+                "location": "Mumbai",
+                "outdoor": false,
+                "weather": "Clear",
+                "alertSent": false
+            },
+            {
+                "title": "Evening Yoga",
+                "time": new Date(Date.now() + 6 * 60 * 60 * 1000).toISOString().slice(0, 19).replace('T', ' '),
+                "location": "Delhi",
+                "outdoor": true,
+                "weather": "Clouds",
+                "alertSent": false
+            }
+        ];
+
+        function weatherIcon(main) {
+            switch (main) {
+                case 'Clear': return '☀️';
+                case 'Clouds': return '☁️';
+                case 'Rain': return '🌧️';
+                case 'Snow': return '❄️';
+                case 'Thunderstorm': return '⛈️';
+                default: return '🌡️';
+            }
+        }
+
+        function showLoading() {
+            const list = document.getElementById('event-list');
+            list.innerHTML = `
+                <div style="text-align:center; color:#666; padding:2rem;">
+                    <div style="font-size:2rem; margin-bottom:1rem;">⏳</div>
+                    <div>Checking weather and events...</div>
+                </div>
+            `;
+        }
+
+        function showSuccess() {
+            const btn = document.getElementById('refresh-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '✅ Updated!';
+            btn.style.background = '#10b981';
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.style.background = '#4f8cff';
+            }, 2000);
+        }
+
+        function renderEvents(events) {
+            const list = document.getElementById('event-list');
+            list.innerHTML = '';
+            events.forEach(ev => {
+                const card = document.createElement('div');
+                card.className = 'event-card';
+                let badge = ev.alertSent ? '<span class="status-badge status-alert">☔ Alert Sent</span>' : '<span class="status-badge status-clear">✅ All Clear</span>';
+                let weather = ev.weather ? `${weatherIcon(ev.weather)} ${ev.weather}` : 'N/A';
+                card.innerHTML = `
+                    <div class="event-title">${ev.title}</div>
+                    <div class="event-info"><b>Time:</b> ${ev.time}</div>
+                    <div class="event-info"><b>Location:</b> ${ev.location}</div>
+                    <div class="event-info"><b>Outdoor:</b> ${ev.outdoor ? 'Yes' : 'No'}</div>
+                    <div class="weather-row"><b>Weather:</b> ${weather}</div>
+                    ${badge}
+                `;
+                list.appendChild(card);
+            });
+        }
+
+        function fetchEvents() {
+            showLoading();
+            setTimeout(() => {
+                renderEvents(mockEvents);
+                showSuccess();
+            }, 800);
+        }
+
+        // Contact form handling
+        document.getElementById('contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const status = document.getElementById('form-status');
+            status.style.display = 'block';
+            status.style.background = '#d1fae5';
+            status.style.color = '#065f46';
+            status.innerHTML = '✅ Thank you! Your message has been sent successfully. We\'ll get back to you within 24 hours.';
+            this.reset();
+            
+            setTimeout(() => {
+                status.style.display = 'none';
+            }, 5000);
+        });
+
+        // Status page functionality
+        function updateStatusStats() {
+            document.getElementById('total-events').textContent = mockEvents.length;
+            document.getElementById('alerts-sent').textContent = mockEvents.filter(e => e.alertSent).length;
+            document.getElementById('api-status').textContent = '100%';
+            document.getElementById('response-time').textContent = (Math.random() * 0.3 + 0.1).toFixed(1) + 's';
+        }
+
+        document.getElementById('refresh-status').addEventListener('click', function() {
+            this.innerHTML = '⏳ Updating...';
+            setTimeout(() => {
+                updateStatusStats();
+                this.innerHTML = '✅ Updated!';
+                setTimeout(() => {
+                    this.innerHTML = '🔄 Refresh Status';
+                }, 2000);
+            }, 1000);
+        });
+
+        // Initialize everything
+        document.addEventListener('DOMContentLoaded', function() {
+            const d = new Date();
+            document.getElementById('date').textContent = d.toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            fetchEvents();
+            updateStatusStats();
+        });
+
+        // Refresh button
+        document.getElementById('refresh-btn').onclick = fetchEvents;
+
+        // Authentication logic
+        const loginOverlay = document.getElementById('login-overlay');
+        const loginForm = document.getElementById('login-form');
+        const loginError = document.getElementById('login-error');
+        const mainBody = document.body;
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            loginOverlay.style.display = 'none';
+            mainBody.style.overflow = '';
+        });
+        window.addEventListener('DOMContentLoaded', function() {
+            loginOverlay.style.display = 'flex';
+            mainBody.style.overflow = 'hidden';
+        });
+    </script>
+</body>
+</html> 
